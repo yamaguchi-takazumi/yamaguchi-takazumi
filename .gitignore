@@ -12,3 +12,9 @@ tmp/
 tmp/*
 .*~
 *~
+
+# Data files
+*.txt
+*.txt~
+indata.py
+indata.py*
