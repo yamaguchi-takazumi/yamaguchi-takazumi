@@ -4,6 +4,8 @@
 
 # Executable files
 *.out
+*.o
+*.a
 
 # Directory storing temporary files
 tmp/
