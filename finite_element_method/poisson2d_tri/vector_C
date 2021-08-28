@@ -1,0 +1,35 @@
+subroutine vector_C(n_n,n_be,n_bn,xdim,ydim,mu,neps,nbeta,ddim,gdim)
+  implicit none
+  integer,intent(in ) :: n_n,n_be,n_bn
+  integer,intent(in ) :: mu(n_be,2),neps(n_bn),nbeta(n_bn)
+  real(8),intent(in ) :: xdim(n_n),ydim(n_n),ddim(n_bn)
+  real(8),intent(out) :: gdim(n_n)
+  integer :: i,j,k,m,n
+  real(8) :: x1,x2,y1,y2,sval
+  real(8),parameter   :: zero=0.0d0,six=6.0d0
+  !
+  gdim(:) = zero
+  do k=1,n_be
+     if( nbeta(mu(k,1))*nbeta(mu(k,2)) /= 0 )then
+        ! ... local lode  
+        x1 = xdim(neps(mu(k,1)))
+        x2 = xdim(neps(mu(k,2)))
+        y1 = ydim(neps(mu(k,1)))
+        y2 = ydim(neps(mu(k,2)))
+        ! ... area of element
+        sval = sqrt((x2-x1)**2+(y2-y1)**2)
+        ! ... local vector
+        do i=1, 2
+           m = neps(mu(k,i))
+           do j=1, 2
+              n = neps(mu(k,j))
+              gdim(m) = gdim(m) + sval*ddim(mu(k,j))/six
+           end do
+           gdim(m) = gdim(m) + sval*ddim(mu(k,i))/six
+        end do
+     end if
+  end do
+  !
+  call sucmp('vector_C')
+  return
+end subroutine vector_C

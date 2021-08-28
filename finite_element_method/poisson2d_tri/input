@@ -1,0 +1,48 @@
+subroutine input
+  use blck0
+  implicit none
+  real(8) :: bc_ratio
+  real(8),parameter :: four=4.0d0
+  namelist /parameters/ nx,ny,xmin,xmax,ymin,ymax,AB,BC,CD,DA
+  namelist /solver/ Iopt_cg,iopt_gauss_seidel,iopt_sor,omega
+  namelist /flname/ fl_dir
+  !
+  ! --- Input parameters
+  !
+  read(*,parameters) 
+  read(*,solver) 
+  read(*,flname)
+  bc_ratio = dble(AB+BC+CD+DA) / four
+  !
+  ! --- Echoback
+  !
+  write(*,'(/a)') '==== Input Parameters ========================='
+  write(*,'(1x,a,2x,1pe10.3)') 'Minimum x-coordinate  :',xmin
+  write(*,'(1x,a,2x,1pe10.3)') 'Maximum x-coordinate  :',xmax
+  write(*,'(1x,a,2x,1pe10.3)') 'Minimum y-coordinate  :',ymin
+  write(*,'(1x,a,2x,1pe10.3)') 'Maximum y-coordinate  :',ymax
+  write(*,'(1x,a,2x,i0)') 'Division number of x-coordinate:',nx
+  write(*,'(1x,a,2x,i0)') 'Division number of y-coordinate:',ny
+  if( AB*BC*CD*DA == 0 )then
+     write(*,'(1x,a)') 'Boundary condition: Dirichlet'
+  else
+     write(*,'(1x,a)') 'Boundary condition: Neumann'
+     write(*,'(1x,a,2x,1pe10.3)') &
+          'Ratio of Neumann condition:', bc_ratio
+  end if
+  if( iopt_cg == 1 )then
+     write(*,'(1x,a)') 'Solver: conjugate gradient method'
+  else if( iopt_gauss_seidel == 1 )then
+     write(*,'(1x,a)') 'Solver: Gauss-Seidel method'
+  else if( iopt_sor == 1 )then
+     write(*,'(1x,a)') 'Solver: successive over-Relaxation method'
+     write(*,'(1x,a,2x,1pe10.3)') 'Acceleration coefficient:',omega
+  else
+     write(*,'(1x,a)') 'Solver: Gauss elimination'
+  end if
+  
+  write(*,'(a/)') '==============================================='
+  !
+  call sucmp('input')
+  return
+end subroutine input

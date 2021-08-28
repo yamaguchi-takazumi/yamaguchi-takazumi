@@ -1,0 +1,8 @@
+module blck0
+  integer :: nx,ny,n_n,n_e,n_bn,n_be,AB,BC,CD,DA,itnum, &
+       iopt_cg,iopt_gauss_seidel,iopt_sor
+  integer,allocatable :: nsgm(:,:),mu(:,:),neps(:),nbeta(:)
+  real(8) :: xmin,xmax,ymin,ymax,rerror,omega,ctime
+  real(8),allocatable :: xdim(:),ydim(:),ddim(:),fdim(:),udim(:)
+  character(len=40)   :: fl_dir,fl_num,fl_ana,fl_err,fl_py
+end module blck0

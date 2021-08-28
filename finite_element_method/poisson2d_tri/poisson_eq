@@ -1,0 +1,20 @@
+subroutine poisson_eq(x,y,f,u,qx,qy)
+  implicit none
+  real(8),intent(in ) :: x,y
+  real(8),intent(out) :: f,u,qx,qy
+  real(8) :: coef
+  real(8),parameter   :: two=2.0d0,pi=4.0d0*atan(1.0d0)
+  !
+  coef = two*pi
+  !
+  u  = sin(coef*x)*cos(coef*y)
+  !
+  qx =  coef*cos(coef*x)*cos(coef*y)
+  qy = -coef*sin(coef*x)*sin(coef*y)
+  !
+  f  = two * coef**2 * sin(coef*x)*cos(coef*y)
+  !
+  !
+  return
+end subroutine poisson_eq
+

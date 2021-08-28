@@ -1,0 +1,21 @@
+ &parameters
+  nx = 100
+  ny = 100
+  xmin = 0.0d0
+  xmax = 1.0d0
+  ymin = 0.0d0
+  ymax = 1.0d0
+  AB = 0
+  BC = 0
+  CD = 0
+  DA = 0
+  /
+ &solver
+  iopt_cg   = 1
+  iopt_gauss_seidel = 0
+  iopt_sor  = 0
+  omega     = 1.2d0
+  /
+ &flname
+  fl_dir='./data/'
+  /

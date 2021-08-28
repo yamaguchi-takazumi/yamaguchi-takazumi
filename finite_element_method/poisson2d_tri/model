@@ -1,0 +1,89 @@
+subroutine model
+  use blck0
+  implicit none
+  integer :: i,j,k
+  real(8) :: dx,dy,f,u,qx,qy
+  !
+  n_n  = nx*ny
+  n_e  = 2*(nx-1)*(ny-1)
+  allocate(xdim(n_n),ydim(n_n),nsgm(n_e,3),fdim(n_n))
+  n_bn = 2*(nx + ny -2)
+  n_be = 2*(nx + ny -2)
+  allocate(mu(n_be,2),neps(n_bn),nbeta(n_bn),ddim(n_bn))
+  !
+  ! --- Decomposition with triangle mesh
+  !
+  ! ... position of node
+  dx = (xmax - xmin) / dble(nx-1)
+  dy = (ymax - ymin) / dble(ny-1)
+  k  = 0 
+  do i=1, ny
+     do j=1, nx
+        k = k + 1
+        xdim(k) = xmin + dx*dble(j-1)
+        ydim(k) = ymin + dy*dble(i-1)
+     end do
+  end do
+  ! ... nodes composing element
+  k = 0
+  do i=1, nx*(ny-1)
+     if( mod(i,nx) /= 0 ) then
+        k = k + 1
+        nsgm(k,1) = i
+        nsgm(k,2) = i + nx + 1
+        nsgm(k,3) = i + nx
+        k = k + 1
+        nsgm(k,1) = i
+        nsgm(k,2) = i + 1
+        nsgm(k,3) = i + nx + 1
+     end if
+  end do
+  ! ... bondory nodes composing boundary element
+  do k=1, n_be
+     mu(k,1) = k
+     mu(k,2) = mod(k,n_be) + 1
+  end do
+  ! ... global node number of boundary node number
+  k = 0
+  do i=1, nx-1
+     k = k + 1
+     neps(k) = i
+  end do
+  do i=1, ny-1
+     k = k + 1
+     neps(k) = i*nx
+  end do
+  do i=1, nx-1
+     k = k + 1
+     neps(k) = n_n - (i-1)
+  end do
+  do i=1, ny-1
+     k = k + 1
+     neps(k) = nx*(ny - i) + 1
+  end do
+  ! ... boundary condition (0: Dirichlet, 1: Neumann)
+  nbeta(:) = 0
+  if( AB /= 0 ) nbeta(2:nx-1) = 1
+  if( BC /= 0 ) nbeta(nx+1:nx+ny-2) = 1
+  if( CD /= 0 ) nbeta(nx+ny:2*nx+ny-3) = 1
+  if( DA /= 0 ) nbeta(2*nx+ny-1:n_bn) = 1
+  ! ... value of poisson equation
+  do i=1, n_n
+     call poisson_eq(xdim(i),ydim(i),fdim(i),u,qx,qy)
+  end do
+  do k=1, n_bn
+     i = neps(k)
+     call poisson_eq(xdim(i),ydim(i),f,u,qx,qy)
+     if( nbeta(k) == 0 )then
+        ddim(k) = u
+     else
+        if( xdim(i) == xmin ) ddim(k) = -qx
+        if( xdim(i) == xmax ) ddim(k) =  qx
+        if( ydim(i) == ymin ) ddim(k) = -qy
+        if( ydim(i) == ymax ) ddim(k) =  qy
+     end if
+  end do
+  !
+  call sucmp('model')
+  return
+end subroutine model

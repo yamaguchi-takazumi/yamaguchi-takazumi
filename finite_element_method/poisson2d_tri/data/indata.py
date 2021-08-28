@@ -1,0 +1,13 @@
+xmin =  0.0000000000000000E+00
+xmax =  1.0000000000000000E+00
+ymin =  0.0000000000000000E+00
+ymax =  1.0000000000000000E+00
+nx = 100
+ny = 100
+n_n = 10000
+n_e = 19602
+n_bn = 396
+n_be = 396
+fl_ana = "./data/analytical.txt                   "
+fl_num = "./data/numerical.txt                    "
+fl_err = "./data/rerror.txt                       "

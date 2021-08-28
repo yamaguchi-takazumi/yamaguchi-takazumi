@@ -1,0 +1,39 @@
+subroutine result_error
+  use blck0
+  implicit none
+  integer :: i
+  real(8) :: dmmy,umax
+  real(8),allocatable :: uvec(:)
+  real(8),parameter   :: zero=0.0d0
+  !
+  open(70,file=fl_ana)
+  open(80,file=fl_num)
+  open(90,file=fl_err)
+  allocate(uvec(n_n))
+  !
+  ! ... Analytical solution of Poisson equation
+  !
+  do i=1, n_n
+     call poisson_eq(xdim(i),ydim(i),dmmy,uvec(i),dmmy,dmmy)
+  end do
+  !
+  umax = maxval(abs(uvec))
+  write(70,'(3(1x,a23))') 'x','y','u(x,y)'
+  write(80,'(3(1x,a23))') 'x','y','u(x,y)'
+  write(90,'(3(1x,a23))') 'x','y','E(x,y)'
+  do i=1, n_n
+     rerror = abs(udim(i)-uvec(i))/umax
+     write(70,'(3(1x,1pe23.16))') xdim(i),ydim(i),uvec(i)
+     write(80,'(3(1x,1pe23.16))') xdim(i),ydim(i),udim(i)
+     write(90,'(3(1x,1pe23.16))') xdim(i),ydim(i),rerror
+  end do
+  rerror = maxval(abs(udim-uvec)) / umax
+  !
+  close(70)
+  close(80)
+  close(90)
+  deallocate(uvec)
+  !
+  call sucmp('result_error')
+  return
+end subroutine result_error

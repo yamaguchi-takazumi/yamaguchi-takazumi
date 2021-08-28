@@ -1,0 +1,26 @@
+subroutine pydata
+  use blck0
+  implicit none
+  !
+  open(90,file=fl_py)
+  !
+  write(90,'(a,1x,a,1x,1pe23.16)') 'xmin','=',xmin 
+  write(90,'(a,1x,a,1x,1pe23.16)') 'xmax','=',xmax 
+  write(90,'(a,1x,a,1x,1pe23.16)') 'ymin','=',ymin 
+  write(90,'(a,1x,a,1x,1pe23.16)') 'ymax','=',ymax
+  write(90,'(a,1x,a,1x,i0)') 'nx','=',nx
+  write(90,'(a,1x,a,1x,i0)') 'ny','=',ny
+  !
+  write(90,'(a,1x,a,1x,i0)') 'n_n','=',n_n
+  write(90,'(a,1x,a,1x,i0)') 'n_e','=',n_e
+  write(90,'(a,1x,a,1x,i0)') 'n_bn','=',n_bn
+  write(90,'(a,1x,a,1x,i0)') 'n_be','=',n_be
+  write(90,'(a,1x,a,1x,a,a,a)') 'fl_ana','=','"',fl_ana,'"'
+  write(90,'(a,1x,a,1x,a,a,a)') 'fl_num','=','"',fl_num,'"'
+  write(90,'(a,1x,a,1x,a,a,a)') 'fl_err','=','"',fl_err,'"'
+  !
+  close(90)
+  !
+  call sucmp('pydata')
+  return
+end subroutine pydata

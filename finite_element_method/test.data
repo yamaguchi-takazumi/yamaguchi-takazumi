@@ -1,0 +1,15 @@
+ &parameters
+  nx = 21
+  ny = 21
+  xmin = -1.0d0
+  xmax =  1.0d0
+  ymin = -1.0d0
+  ymax =  1.0d0
+  AB = 0
+  BC = 0
+  CD = 0
+  DA = 0
+  /
+ &flname
+  fl_dir='./data/'
+  /

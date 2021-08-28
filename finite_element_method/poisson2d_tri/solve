@@ -1,0 +1,62 @@
+subroutine solve
+  use blck0
+  implicit none
+  integer :: i,k,itmax
+  real(8) :: t1, t2
+  real(8),allocatable :: adim(:,:),bdim(:,:),cdim(:),alph(:)
+  real(8),parameter   :: zero=0.0d0,one=1.0d0,epsln=1.0d-12
+  logical,parameter   :: iopt=.true.
+  !
+  allocate(adim(n_n,n_n),bdim(n_n,n_n),cdim(n_n),alph(n_n))
+  !
+  ! --- Global matrix and vector
+  !
+  call matrix_A(n_n,n_e,xdim,ydim,nsgm,adim)
+  call matrix_B(n_n,n_e,xdim,ydim,nsgm,bdim)
+  call vector_C(n_n,n_be,n_bn,xdim,ydim,mu,neps,nbeta,ddim,cdim)
+  cdim(:) = matmul(bdim,fdim) + cdim(:)
+  ! ... bondary condition
+  alph(:) = zero
+  do i=1, n_bn
+     k = neps(i)
+     if( nbeta(i) == 0 ) alph(k) = ddim(i)
+  end do
+  cdim(:) = cdim(:) - matmul(adim,alph)
+  do i=1, n_bn
+     k = neps(i)
+     if( nbeta(i) == 0 )then
+        adim(k,:) = zero
+        adim(:,k) = zero
+        adim(k,k) = one
+        cdim(k) = ddim(i)
+     end if
+  end do
+  !
+  allocate(udim(n_n))
+  if( iopt_cg == 1 )then
+     itmax = n_n
+     call cpu_time(t1)
+     call cgm(n_n,adim,cdim,itmax,epsln,iopt,udim,itnum)
+     call cpu_time(t2)
+  else if( iopt_gauss_seidel == 1 )then
+     itmax = 10*n_n
+     call cpu_time(t1)
+     call gauss_seidel(n_n,adim,cdim,itmax,epsln,iopt,udim,itnum)
+     call cpu_time(t2)
+  else if( iopt_sor == 1 )then
+     itmax = 10*n_n
+     call cpu_time(t1)
+     call sor(n_n,adim,cdim,omega,itmax,epsln,iopt,udim,itnum)
+     call cpu_time(t2)
+  else
+     call cpu_time(t1)
+     call gauss(n_n,adim,cdim,udim)
+     call cpu_time(t2)
+  end if
+  ctime = t2 - t1
+  !
+  deallocate(adim,bdim,cdim,alph)
+  !
+  call sucmp('solve')
+  return
+end subroutine solve

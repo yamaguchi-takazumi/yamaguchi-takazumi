@@ -1,0 +1,34 @@
+subroutine output
+  use blck0
+  implicit none
+  !
+  fl_ana = trim(fl_dir) // 'analytical.txt'
+  fl_num = trim(fl_dir) // 'numerical.txt'
+  fl_err = trim(fl_dir) // 'rerror.txt'
+  fl_py  = trim(fl_dir) // 'indata.py'
+  !
+  call result_error
+  call pydata
+  !
+  write(*,'(/a)') '==== Numerical Result ========================='
+  write(*,'(1x,a,2x,i0)') 'Number of nodes            :', n_n
+  write(*,'(1x,a,2x,i0)') 'Number of elements         :', n_e
+  write(*,'(1x,a,2x,i0)') 'Number of boundary nodes   :', n_bn
+  write(*,'(1x,a,2x,i0)') 'Number of boundary elements:', n_be
+  write(*,'(1x,a,2x,1pe12.5)') 'Relative error:', rerror
+  write(*,'(a)') '==== Computational Time ======================='
+  if( iopt_cg+iopt_gauss_seidel+iopt_sor > 0 ) &
+       write(*,'(1x,a,3x,i0)') 'Number of itermations:', itnum
+  write(*,'(1x,a,2x,1pe12.5)') 'CPU time             :', ctime
+  write(*,'(a)') '==== Data File ================================'
+  write(*,'(1x,a,1x,a)') 'Analytical solution  >', fl_ana
+  write(*,'(1x,a,1x,a)') 'Numerical solution   >', fl_num
+  write(*,'(1x,a,1x,a)') 'Relative error       >', fl_err
+  write(*,'(1x,a,1x,a)') 'File for python code >', fl_py
+  write(*,'(a/)') '==============================================='
+  !
+  deallocate(xdim,ydim,nsgm,fdim,mu,neps,nbeta,ddim,udim)
+  !
+  call sucmp('output')
+  return
+end subroutine output

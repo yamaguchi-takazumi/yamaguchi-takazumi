@@ -1,0 +1,42 @@
+subroutine matrix_A(n_n,n_e,xdim,ydim,nsgm,gdim)
+  implicit none
+  integer,intent(in ) :: n_n,n_e,nsgm(n_e,3)
+  real(8),intent(in ) :: xdim(n_n),ydim(n_n)
+  real(8),intent(out) :: gdim(n_n,n_n)
+  integer :: i,j,k,m,n
+  real(8) :: x1,x2,x3,y1,y2,y3,sval,bdim(3),cdim(3),gval
+  real(8),parameter   :: zero=0.0d0,two=2.0d0,four=4.0d0
+  !
+  gdim(:,:) = zero
+  do k=1,n_e
+     ! ... local lode  
+     x1 = xdim(nsgm(k,1))
+     x2 = xdim(nsgm(k,2))
+     x3 = xdim(nsgm(k,3))
+     y1 = ydim(nsgm(k,1))
+     y2 = ydim(nsgm(k,2))
+     y3 = ydim(nsgm(k,3))
+     ! ... area of element
+     sval = abs((x1-x3)*(y2-y3)-(x2-x3)*(y1-y3))/two
+     ! ... coefficient of shape function
+     bdim(1) = y2 - y3
+     bdim(2) = y3 - y1
+     bdim(3) = y1 - y2
+     cdim(1) = x3 - x2
+     cdim(2) = x1 - x3
+     cdim(3) = x2 - x1
+     ! ... local matrix
+     do i=1, 3
+        m = nsgm(k,i)
+        do j=1, 3
+           n = nsgm(k,j) 
+           gval = bdim(i)*bdim(j) + cdim(i)*cdim(j)
+           gval = gval / (four*sval)
+           gdim(m,n) = gdim(m,n) + gval
+        end do
+     end do
+  end do
+  !
+  call sucmp('matrix_A')
+  return
+end subroutine matrix_A
