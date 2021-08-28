@@ -1,0 +1,7 @@
+# Hidden files
+.*/
+.*
+
+# Directory storing temporary files
+tmp/
+tmp/*
