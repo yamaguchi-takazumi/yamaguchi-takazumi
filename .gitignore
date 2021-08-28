@@ -2,6 +2,9 @@
 .*/
 .*
 
+# Executable files
+*.out
+
 # Directory storing temporary files
 tmp/
 tmp/*
