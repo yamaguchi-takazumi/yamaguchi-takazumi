@@ -27,7 +27,7 @@ subroutine rk2(neq,t0,tn,x0,xn,fsub)
   end interface
   !
   dt = tn - t0
-  !-Calc coefficient for runge-kutta method
+  ! ... Calc. coefficient for runge-kutta method
   call fsub(neq,t0,x0,k1)
   k1 = dt*k1(:)
   call fsub(neq,tn,x0,k2)

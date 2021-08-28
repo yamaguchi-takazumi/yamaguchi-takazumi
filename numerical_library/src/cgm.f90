@@ -47,8 +47,11 @@ subroutine cgm(nval,adim,bdim,itmax,epsln,iopt,xdim,itnum)
   end do
   itnum = k
   !
-  if( rerror > epsln ) write(*,'(a)') '... Not converge! ...'
-  if( iopt ) write(*,'(a/)') '....................................'
+  if( rerror > epsln )then
+     write(*,'(a)') '... Not converge! ...'
+  else if( iopt )then
+     write(*,'(a/)') '....................................'
+  end if
   !
   return
 end subroutine cgm

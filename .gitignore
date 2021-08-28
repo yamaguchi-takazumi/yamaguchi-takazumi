@@ -18,3 +18,7 @@ tmp/*
 *.txt~
 indata.py
 indata.py*
+
+# Directory storing files in development
+dev/
+dev/*

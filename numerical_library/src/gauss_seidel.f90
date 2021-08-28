@@ -58,8 +58,11 @@ subroutine gauss_seidel(nval,adim,bdim,itmax,epsln,iopt,xdim,itnum)
   end do
   itnum = k
   !
-  if( sqrt(dnorm2) > epsln ) write(*,'(a)') '... Not converge! ...'
-  if( iopt ) write(*,'(a/)') '....................................'
+  if( sqrt(dnorm2) > epsln )then
+     write(*,'(a)') '... Not converge! ...'
+  else if( iopt )then
+     write(*,'(a/)') '....................................'
+  end if
   !
   return
 end subroutine gauss_seidel
